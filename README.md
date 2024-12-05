@@ -113,4 +113,11 @@ The allocator uses the following data structures and methods to manage the memor
 </ol>
 
 # Flow diagram
-![codetoflow](https://github.com/user-attachments/assets/442de0e9-c296-45cd-b51c-dcfcab41ffdb)
+<h3>Allocation</h3>
+
+![codetoflow](https://github.com/user-attachments/assets/95334632-83d6-49aa-b06c-17f00f5ff040)
+
+
+<h3>Deallocation</h3>
+
+![codetoflow (1)](https://github.com/user-attachments/assets/2509c830-215b-4efb-bbff-ea4e69b200dd)
