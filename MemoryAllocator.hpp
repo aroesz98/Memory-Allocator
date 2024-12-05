@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef MEMORYALLOCATOR_H
-#define MEMORYALLOCATOR_H
+#ifndef MEMORYALLOCATOR_HPP
+#define MEMORYALLOCATOR_HPP
 
 #include <cstddef>
 #include <memory>
@@ -77,4 +77,4 @@ class MemoryAllocator
         std::unique_ptr<Block> mHead;
 };
 
-#endif // MEMORYALLOCATOR_H
+#endif // MEMORYALLOCATOR_HPP
