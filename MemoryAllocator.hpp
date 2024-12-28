@@ -23,17 +23,22 @@ class MemoryAllocator
     public:
         /**
          * Constructor for MemoryAllocator.
+         */
+        MemoryAllocator();
+
+        /**
+         * Initializes the memory pool.
          * @param memoryPool - pointer to the memory pool
          * @param memoryPoolSize - size of the memory pool
          */
-        MemoryAllocator(void* memoryPool, size_t memoryPoolSize);
+        void init(void* memoryPool, uint32_t memoryPoolSize);
 
         /**
          * Allocates a block of memory of the specified size.
          * @param size - size of the block to allocate
          * @return pointer to the allocated memory or nullptr if there is not enough memory
          */
-        void* allocate(size_t size);
+        void* allocate(uint32_t size);
 
         /**
          * Frees a previously allocated block of memory.
@@ -45,19 +50,13 @@ class MemoryAllocator
          * Returns the total amount of free memory.
          * @return size of free memory
          */
-        size_t getFreeMemory() const;
+        uint32_t getFreeMemory() const;
 
         /**
          * Returns the total amount of allocated memory.
          * @return size of allocated memory
          */
-        size_t getAllocatedMemory() const;
-
-        /**
-         * Returns the number of allocated blocks.
-         * @return number of allocated blocks
-         */
-        size_t getAllocatedBlocks() const;
+        uint32_t getAllocatedMemory() const;
 
         /**
          * Prints information about the allocated blocks.
@@ -65,16 +64,24 @@ class MemoryAllocator
         void printAllocatedBlocks() const;
 
     private:
-        struct Block {
-            size_t size;
-            bool isFree;
-            std::unique_ptr<Block> next;
-            Block* prev;
+        struct Block
+        {
+            uint32_t size;
+            bool free;
+            Block *prev;
+            Block *next;
+            uint32_t startMarker;
+            uint32_t endMarker;
         };
 
-        char* mMemoryPool;
-        size_t mMemoryPoolSize;
-        std::unique_ptr<Block> mHead;
+        Block *mHead;
+        Block *mTail;
+        void *mPool;
+        uint32_t mPoolSize;
+
+        uint32_t align8(uint32_t size);
+        void split(Block *block, uint32_t size);
+        void join(Block *block);
 };
 
 #endif // MEMORYALLOCATOR_HPP

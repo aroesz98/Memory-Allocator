@@ -16,21 +16,38 @@
 #include <cassert>
 #include <cstdio>
 
+static constexpr uint32_t MARKER = 0xDEADBEEFul;
+
 /**
  * Constructor for MemoryAllocator.
  * @param memoryPool - pointer to the memory pool
  * @param memoryPoolSize - size of the memory pool
  */
-MemoryAllocator::MemoryAllocator(void* memoryPool, size_t memoryPoolSize)
-    : mMemoryPool(reinterpret_cast<char*>(memoryPool)), mMemoryPoolSize(memoryPoolSize)
+MemoryAllocator::MemoryAllocator() : mHead(nullptr),
+                                     mTail(nullptr),
+                                     mPool(nullptr),
+                                     mPoolSize(0u)
 {
-    Block* initialBlock = reinterpret_cast<Block*>(memoryPool);
-    initialBlock->size = memoryPoolSize - sizeof(Block);
-    initialBlock->isFree = true;
-    initialBlock->next = nullptr;
-    initialBlock->prev = nullptr;
+}
 
-    mHead.reset(initialBlock);
+/**
+ * Constructor for MemoryAllocator.
+ * @param memoryPool - pointer to the memory pool
+ * @param memoryPoolSize - size of the memory pool
+ */
+void MemoryAllocator::init(void *memoryPool, uint32_t totalSize)
+{
+    mHead = (Block *)memoryPool;
+    mHead->size = totalSize - sizeof(Block) - 2 * sizeof(uint32_t);
+    mHead->free = true;
+    mHead->prev = nullptr;
+    mHead->next = nullptr;
+    mHead->startMarker = MARKER;
+    mHead->endMarker = MARKER;
+
+    mPool = memoryPool;
+    mPoolSize = totalSize;
+    mTail = mHead;
 }
 
 /**
@@ -38,39 +55,47 @@ MemoryAllocator::MemoryAllocator(void* memoryPool, size_t memoryPoolSize)
  * @param size - size of the block to allocate
  * @return pointer to the allocated memory or nullptr if there is not enough memory
  */
-void* MemoryAllocator::allocate(size_t size)
+void* MemoryAllocator::allocate(uint32_t size)
 {
-    assert(size > 0 && "Allocation size must be greater than zero");
-
-    Block* current = mHead.get();
-
-    while (current != nullptr)
+    if (size == 0)
     {
-        if (current->isFree && current->size >= size)
+        return nullptr;
+    }
+
+    size = align8(size);
+
+    Block* forward = mHead;
+    Block* backward = mTail;
+
+    while (forward || backward)
+    {
+        if (forward)
         {
-            if (current->size > size + sizeof(Block))
+            if (forward->free && forward->size >= size)
             {
-                auto newBlock = std::make_unique<Block>();
-
-                newBlock->size = current->size - size - sizeof(Block);
-                newBlock->isFree = true;
-                newBlock->next = std::move(current->next);
-                newBlock->prev = current;
-
-                current->size = size;
-                current->next = std::move(newBlock);
-
-                if (current->next->next != nullptr)
+                if (forward->size >= size + sizeof(Block) + 2 * sizeof(uint32_t))
                 {
-                    current->next->next->prev = current->next.get();
+                    split(forward, size);
                 }
+                forward->free = false;
+                return (void*)((char*)forward + sizeof(Block) + sizeof(uint32_t));
             }
-
-            current->isFree = false;
-            return reinterpret_cast<void*>(reinterpret_cast<char*>(current) + sizeof(Block));
+            forward = forward->next;
         }
 
-        current = current->next.get();
+        if (backward && backward != forward)
+        {
+            if (backward->free && backward->size >= size)
+            {
+                if (backward->size >= size + sizeof(Block) + 2 * sizeof(uint32_t))
+                {
+                    split(backward, size);
+                }
+                backward->free = false;
+                return (void*)((char*)backward + sizeof(Block) + sizeof(uint32_t));
+            }
+            backward = backward->prev;
+        }
     }
 
     return nullptr;
@@ -80,34 +105,113 @@ void* MemoryAllocator::allocate(size_t size)
  * Frees a previously allocated block of memory.
  * @param ptr - pointer to the block of memory to free
  */
-void MemoryAllocator::deallocate(void* ptr)
+void MemoryAllocator::deallocate(void *ptr)
 {
-    if (ptr == nullptr) return;
-
-    Block* blockToFree = reinterpret_cast<Block*>(reinterpret_cast<char*>(ptr) - sizeof(Block));
-    assert(blockToFree >= mHead.get() && "Memory pool boundary exceeded");
-    blockToFree->isFree = true;
-
-    if (blockToFree->next != nullptr && blockToFree->next->isFree)
+    if (!ptr)
     {
-        blockToFree->size += sizeof(Block) + blockToFree->next->size;
-        blockToFree->next = std::move(blockToFree->next->next);
-
-        if (blockToFree->next != nullptr)
-        {
-            blockToFree->next->prev = blockToFree;
-        }
+        return;
     }
 
-    if (blockToFree->prev != nullptr && blockToFree->prev->isFree)
+    Block *block = (Block *)((char *)ptr - sizeof(Block) - sizeof(uint32_t));
+    if (block->startMarker != MARKER || block->endMarker != MARKER)
     {
-        blockToFree->prev->size += sizeof(Block) + blockToFree->size;
-        blockToFree->prev->next = std::move(blockToFree->next);
+        assert(false);
+        return;
+    }
+    block->free = true;
 
-        if (blockToFree->prev->next != nullptr)
+    if (block->prev && block->prev->free)
+    {
+        block->prev->size += block->size + sizeof(Block) + 2 * sizeof(uint32_t);
+        block->prev->next = block->next;
+
+        if (block->next)
         {
-            blockToFree->prev->next->prev = blockToFree->prev;
+            block->next->prev = block->prev;
         }
+
+        block->prev->endMarker = MARKER;
+        block = block->prev;
+    }
+    if (block->next && block->next->free)
+    {
+        block->size += block->next->size + sizeof(Block) + 2 * sizeof(uint32_t);
+        block->next = block->next->next;
+
+        if (block->next)
+        {
+            block->next->prev = block;
+        }
+
+        block->endMarker = MARKER;
+    }
+
+    if (block->next == nullptr)
+    {
+        mTail = block;
+    }
+}
+
+uint32_t MemoryAllocator::align8(uint32_t size)
+{
+    return (size + 7) & ~7;
+}
+
+void MemoryAllocator::split(Block *block, uint32_t size)
+{
+    Block *newBlock = (Block *)((char *)block + sizeof(Block) + size + 2 * sizeof(uint32_t));
+    newBlock->size = block->size - size - sizeof(Block) - 2 * sizeof(uint32_t);
+    newBlock->free = true;
+    newBlock->prev = block;
+    newBlock->next = block->next;
+    newBlock->startMarker = MARKER;
+    newBlock->endMarker = MARKER;
+    if (block->next)
+    {
+        block->next->prev = newBlock;
+    }
+    block->next = newBlock;
+    block->size = size;
+    block->endMarker = MARKER;
+
+    if (newBlock->next == nullptr)
+    {
+        mTail = newBlock;
+    }
+}
+
+void MemoryAllocator::join(Block *block)
+{
+    if (block->prev && block->prev->free)
+    {
+        block->prev->size += block->size + sizeof(Block) + 2 * sizeof(uint32_t);
+        block->prev->next = block->next;
+
+        if (block->next)
+        {
+            block->next->prev = block->prev;
+        }
+
+        block->prev->endMarker = MARKER;
+        block = block->prev;
+    }
+
+    if (block->next && block->next->free)
+    {
+        block->size += block->next->size + sizeof(Block) + 2 * sizeof(uint32_t);
+        block->next = block->next->next;
+
+        if (block->next)
+        {
+            block->next->prev = block;
+        }
+
+        block->endMarker = MARKER;
+    }
+
+    if (block->next == nullptr)
+    {
+        mTail = block;
     }
 }
 
@@ -115,21 +219,19 @@ void MemoryAllocator::deallocate(void* ptr)
  * Returns the total amount of free memory.
  * @return size of free memory
  */
-size_t MemoryAllocator::getFreeMemory() const
+uint32_t MemoryAllocator::getFreeMemory() const
 {
-    Block* current = mHead.get();
-    size_t freeMemory = 0;
+    uint32_t freeMemory = 0;
+    Block *current = mHead;
 
-    while (current != nullptr)
+    while (current)
     {
-        if (current->isFree)
+        if (current->free)
         {
             freeMemory += current->size;
         }
-
-        current = current->next.get();
+        current = current->next;
     }
-
     return freeMemory;
 }
 
@@ -137,44 +239,19 @@ size_t MemoryAllocator::getFreeMemory() const
  * Returns the total amount of allocated memory.
  * @return size of allocated memory
  */
-size_t MemoryAllocator::getAllocatedMemory() const
+uint32_t MemoryAllocator::getAllocatedMemory() const
 {
-    Block* current = mHead.get();
-    size_t allocatedMemory = 0;
-
-    while (current != nullptr)
+    uint32_t allocatedMemory = 0;
+    Block *current = mHead;
+    while (current)
     {
-        if (!current->isFree)
+        if (!current->free)
         {
             allocatedMemory += current->size;
         }
-
-        current = current->next.get();
+        current = current->next;
     }
-
     return allocatedMemory;
-}
-
-/**
- * Returns the number of allocated blocks.
- * @return number of allocated blocks
- */
-size_t MemoryAllocator::getAllocatedBlocks() const
-{
-    Block* current = mHead.get();
-    size_t allocatedBlocks = 0;
-
-    while (current != nullptr)
-    {
-        if (!current->isFree)
-        {
-            allocatedBlocks++;
-        }
-
-        current = current->next.get();
-    }
-
-    return allocatedBlocks;
 }
 
 /**
@@ -182,19 +259,14 @@ size_t MemoryAllocator::getAllocatedBlocks() const
  */
 void MemoryAllocator::printAllocatedBlocks() const
 {
-    Block* current = mHead.get();
-    printf("Number of allocated blocks: %u\n", static_cast<unsigned>(getAllocatedBlocks()));
-    printf("Allocated blocks (size in bytes): ");
-
-    while (current != nullptr)
+    Block *current = mHead;
+    printf("Allocated Blocks:\r\n");
+    while (current)
     {
-        if (!current->isFree)
+        if (!current->free)
         {
-            printf("%u ", static_cast<unsigned>(current->size));
+            printf("Address: %p, Size: %lu bytes\r\n", (void*)((char*)current + sizeof(Block) + sizeof(uint32_t)), current->size);
         }
-
-        current = current->next.get();
+        current = current->next;
     }
-
-    printf("\n");
 }
