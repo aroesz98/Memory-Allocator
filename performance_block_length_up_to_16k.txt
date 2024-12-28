@@ -1,0 +1,50 @@
+=========================================
+|| Malloc: 557 || MemoryAllocator: 193 ||
+|| Malloc: 568 || MemoryAllocator: 238 ||
+|| Malloc: 621 || MemoryAllocator: 236 ||
+|| Malloc: 621 || MemoryAllocator: 236 ||
+|| Malloc: 621 || MemoryAllocator: 236 ||
+|| Malloc: 663 || MemoryAllocator: 236 ||
+|| Malloc: 663 || MemoryAllocator: 236 ||
+|| Malloc: 663 || MemoryAllocator: 236 ||
+|| Malloc: 663 || MemoryAllocator: 236 ||
+|| Malloc: 673 || MemoryAllocator: 236 ||
+=========================================
+MemoryAllocator free mem: 23816
+MemoryAllocator allocated mem: 88472
+Allocated Blocks:
+Address: 0x200000b4, Size: 13360 bytes
+Address: 0x20003504, Size: 3280 bytes
+Address: 0x200041f4, Size: 13896 bytes
+Address: 0x2000785c, Size: 12592 bytes
+Address: 0x2000a9ac, Size: 6920 bytes
+Address: 0x2000c4d4, Size: 7608 bytes
+Address: 0x2000e2ac, Size: 16248 bytes
+Address: 0x20012244, Size: 6616 bytes
+Address: 0x20013c3c, Size: 2152 bytes
+Address: 0x200144c4, Size: 5800 bytes
+=========================================
+|| Malloc free time: 227 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 253 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 254 ||
+|| Malloc free time: 254 ||
+|| Malloc free time: 254 ||
+|| Malloc free time: 254 ||
+|| Malloc free time: 273 ||
+=========================================
+|| MemoryAllocator free time: 208   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 228   ||
+=========================================
+MemoryAllocator free mem: 112608
+MemoryAllocator allocated mem: 0

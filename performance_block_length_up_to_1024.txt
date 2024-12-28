@@ -1,0 +1,110 @@
+=========================================
+|| Malloc: 557 || MemoryAllocator: 194 ||
+|| Malloc: 568 || MemoryAllocator: 239 ||
+|| Malloc: 621 || MemoryAllocator: 237 ||
+|| Malloc: 621 || MemoryAllocator: 237 ||
+|| Malloc: 621 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 364 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 663 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 352 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+|| Malloc: 673 || MemoryAllocator: 237 ||
+=========================================
+MemoryAllocator free mem: 2528
+MemoryAllocator allocated mem: 13024
+Allocated Blocks:
+Address: 0x2004001c, Size: 48 bytes
+Address: 0x2004006c, Size: 208 bytes
+Address: 0x2004015c, Size: 584 bytes
+Address: 0x200403c4, Size: 304 bytes
+Address: 0x20040514, Size: 776 bytes
+Address: 0x2004083c, Size: 440 bytes
+Address: 0x20040a14, Size: 888 bytes
+Address: 0x20040dac, Size: 472 bytes
+Address: 0x20040fa4, Size: 104 bytes
+Address: 0x2004102c, Size: 680 bytes
+Address: 0x200412f4, Size: 1024 bytes
+Address: 0x20041714, Size: 64 bytes
+Address: 0x20041774, Size: 304 bytes
+Address: 0x200418c4, Size: 760 bytes
+Address: 0x20041bdc, Size: 512 bytes
+Address: 0x20041dfc, Size: 992 bytes
+Address: 0x200421fc, Size: 896 bytes
+Address: 0x2004259c, Size: 920 bytes
+Address: 0x20042954, Size: 528 bytes
+Address: 0x20042b84, Size: 48 bytes
+Address: 0x20042bd4, Size: 168 bytes
+Address: 0x20042c9c, Size: 344 bytes
+Address: 0x20042e14, Size: 888 bytes
+Address: 0x200431ac, Size: 872 bytes
+Address: 0x20043534, Size: 200 bytes
+=========================================
+|| Malloc free time: 227 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 253 ||
+|| Malloc free time: 253 ||
+|| Malloc free time: 272 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 278 ||
+|| Malloc free time: 278 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 290 ||
+|| Malloc free time: 278 ||
+|| Malloc free time: 267 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+|| Malloc free time: 271 ||
+=========================================
+|| MemoryAllocator free time: 208   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 206   ||
+|| MemoryAllocator free time: 228   ||
+=========================================
+MemoryAllocator free mem: 16352
+MemoryAllocator allocated mem: 0
