@@ -7,9 +7,9 @@ The allocator uses the following data structures and methods to manage the memor
 <ol>
   <h3><li>Block Structure:</li></h3>
   <ul>
-    <li>size_t size: Size of the memory block.</li>
+    <li>uint32_t size: Size of the memory block.</li>
     <li>bool isFree: Indicates if the block is free.</li>
-    <li>std::unique_ptr<Block> next: Pointer to the next block.</li>
+    <li>Block* next: Pointer to the next block.</li>
     <li>Block* prev: Pointer to the previous block.</li>
   </ul>
 
@@ -19,12 +19,12 @@ The allocator uses the following data structures and methods to manage the memor
 <ul>
   <h3><li>Constructor:</li></h3>
   <ul>
-    <li>MemoryAllocator(void* memoryPool, size_t memoryPoolSize): Initializes the memory allocator with a given memory pool and its size.</li>
+    <li>MemoryAllocator(void* memoryPool, uint32_t memoryPoolSize): Initializes the memory allocator with a given memory pool and its size.</li>
   </ul>
 
   <h3><li>Allocation Method:</li></h3>
   <ul>
-    <li>void* allocate(size_t size): Allocates a memory block of the specified size.</li>
+    <li>void* allocate(uint32_t size): Allocates a memory block of the specified size.</li>
   </ul>
 
   <h3><li>Deallocation Method:</li></h3>
@@ -34,8 +34,8 @@ The allocator uses the following data structures and methods to manage the memor
 
   <h3><li>Memory Statistics Methods:</li></h3>
   <ul>
-    <li>size_t getFreeMemory() const: Returns the total amount of free memory.</li>
-    <li>size_t getAllocatedMemory() const: Returns the total amount of allocated memory.</li>
+    <li>uint32_t getFreeMemory() const: Returns the total amount of free memory.</li>
+    <li>uint32_t getAllocatedMemory() const: Returns the total amount of allocated memory.</li>
     <li>void printAllocatedBlocks() const: Prints information about the allocated blocks.</li>
   </ul>
 </ul>
@@ -43,24 +43,24 @@ The allocator uses the following data structures and methods to manage the memor
 
 # Function Descriptions
 <ol>
-  <h3><li>MemoryAllocator(void* memoryPool, size_t memoryPoolSize)</li></h3>
+  <h3><li>MemoryAllocator(void* memoryPool, uint32_t memoryPoolSize)</li></h3>
   <ul>
     <li>Initializes the memory pool by creating the initial free block encompassing the entire memory pool.</li>
     <h5><li>Parameters:</li></h5>
     <ul>
       <li>void* memoryPool: Pointer to the memory pool.</li>
-      <li>size_t memoryPoolSize: Size of the memory pool.</li>
+      <li>uint32_t memoryPoolSize: Size of the memory pool.</li>
     </ul>
   </ul>
 
-  <h3><li>void allocate(size_t size)</li></h3>
+  <h3><li>void allocate(uint32_t size)</li></h3>
   <ul>
     <li>Allocates a memory block of the specified size.</li>
     <li>Searches the list of blocks for a suitable free block.</li>
     <li>If a suitable block is found, it is allocated, and the remaining free space (if any) is split into a new free block.</li>
     <h5><li>Parameters:</li></h5>
     <ul>
-      <li>size_t size: Size of the block to allocate.</li>
+      <li>uint32_t size: Size of the block to allocate.</li>
     </ul>
     <h5><li>Returns:</li></h5>
     <ul>
@@ -78,7 +78,7 @@ The allocator uses the following data structures and methods to manage the memor
     </ul>
   </ul>
 
-  <h3><li>size_t getFreeMemory() const</li></h3>
+  <h3><li>uint32_t getFreeMemory() const</li></h3>
   <ul>
     <li>Computes and returns the total amount of free memory.</li>
     <h5><li>Returns:</li></h5>
@@ -87,7 +87,7 @@ The allocator uses the following data structures and methods to manage the memor
     </ul>
   </ul>
 
-  <h3><li>size_t getAllocatedMemory() const</li></h3>
+  <h3><li>uint32_t getAllocatedMemory() const</li></h3>
   <ul>
     <li>Computes and returns the total amount of allocated memory.</li>
     <h5><li>Returns:</li></h5>
