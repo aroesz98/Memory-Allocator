@@ -36,7 +36,6 @@ The allocator uses the following data structures and methods to manage the memor
   <ul>
     <li>size_t getFreeMemory() const: Returns the total amount of free memory.</li>
     <li>size_t getAllocatedMemory() const: Returns the total amount of allocated memory.</li>
-    <li>size_t getAllocatedBlocks() const: Returns the number of allocated blocks.</li>
     <li>void printAllocatedBlocks() const: Prints information about the allocated blocks.</li>
   </ul>
 </ul>
@@ -94,15 +93,6 @@ The allocator uses the following data structures and methods to manage the memor
     <h5><li>Returns:</li></h5>
     <ul>
       <li>Total size of allocated memory.</li>
-    </ul>
-  </ul>
-
-  <h3><li>size_t getAllocatedBlocks() const</li></h3>
-  <ul>
-    <li>Computes and returns the number of allocated blocks.</li>
-    <h5><li>Returns:</li></h5>
-    <ul>
-      <li>Number of allocated blocks.</li>
     </ul>
   </ul>
 
