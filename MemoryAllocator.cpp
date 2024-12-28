@@ -150,6 +150,8 @@ void MemoryAllocator::deallocate(void *ptr)
     {
         mTail = block;
     }
+
+    join(block);
 }
 
 uint32_t MemoryAllocator::align8(uint32_t size)
